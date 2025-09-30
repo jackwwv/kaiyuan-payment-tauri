@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minimal Test</title>
+</head>
+<body>
+    <div id="app">
+        <h1>{{ message }}</h1>
+        <p>If you see this message, Vue is working!</p>
+    </div>
+    
+    <script type="module" src="/src/main-simple.js"></script>
+    
+    <script>
+        // 等待 Vue 加载
+        setTimeout(() => {
+            console.log('Checking window.vueApp:', window.vueApp);
+            if (window.vueApp) {
+                console.log('✅ Vue app found!');
+                document.body.innerHTML += '<p style="color: green;">✅ Vue app is working!</p>';
+            } else {
+                console.log('❌ Vue app not found');
+                document.body.innerHTML += '<p style="color: red;">❌ Vue app not found</p>';
+            }
+        }, 2000);
+    </script>
+</body>
+</html>

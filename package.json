@@ -1,0 +1,45 @@
+{
+  "name": "kaiyuan-payment-tauri",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "tauri": "tauri"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "^2.0.0",
+    "animate.css": "^4.1.1",
+    "axios": "^1.12.2",
+    "babel-polyfill": "^6.26.0",
+    "benz-amr-recorder": "^1.1.5",
+    "dexie": "^4.2.0",
+    "emoji-mart-vue-fast": "^7.0.0",
+    "eruda": "^3.4.3",
+    "es6-promise": "^4.2.8",
+    "js-md5": "^0.8.3",
+    "jsencrypt": "^3.3.2",
+    "lrz": "^4.9.41",
+    "mescroll.js": "^1.4.2",
+    "push.js": "^1.0.12",
+    "recorder-core": "^1.3.25011100",
+    "socket.io-client": "^2.4.0",
+    "swiper": "^12.0.2",
+    "vant": "^2.12.54",
+    "vue": "^2.6.14",
+    "vue-clipboard2": "^0.3.3",
+    "vue-cropper": "^0.6.5",
+    "vue-photo-preview": "^1.1.3",
+    "vue-router": "^3.5.4",
+    "vue-ydui": "^1.2.6",
+    "vuex": "^3.6.2"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.0.0",
+    "sass": "^1.69.5",
+    "vite": "^4.5.0",
+    "vite-plugin-vue2": "^2.0.3"
+  }
+}

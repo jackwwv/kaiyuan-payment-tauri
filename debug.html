@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug - 开云支付</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f5f5f5;
+        }
+        .debug-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .warning { background: #fff3cd; color: #856404; }
+        .info { background: #d1ecf1; color: #0c5460; }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #0056b3; }
+        #console-output {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 10px;
+            height: 200px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="debug-container">
+        <h1>🔍 开云支付 - 调试页面123</h1>
+        
+        <div class="status info">
+            <strong>调试信息：</strong> 这个页面用于诊断应用问题
+        </div>
+
+        <h2>环境检测</h2>
+        <div id="env-info">
+            <div class="status warning">正在检测环境...</div>
+        </div>
+
+        <h2>Vue 应用测试</h2>
+        <div id="vue-test">
+            <div class="status warning">正在测试 Vue...</div>
+        </div>
+
+        <h2>路由测试</h2>
+        <div id="router-test">
+            <div class="status warning">正在测试路由...</div>
+        </div>
+
+        <h2>控制台输出</h2>
+        <div id="console-output"></div>
+
+        <h2>操作</h2>
+        <button onclick="testVue()">测试 Vue</button>
+        <button onclick="testRouter()">测试路由</button>
+        <button onclick="testStore()">测试 Store</button>
+        <button onclick="testEnvVars()">测试环境变量</button>
+        <button onclick="clearConsole()">清空控制台</button>
+        <button onclick="location.reload()">刷新页面</button>
+        
+        <div id="env-test"></div>
+    </div>
+
+    <script>
+        // 重写 console.log 来显示在页面上
+        const originalLog = console.log;
+        const originalError = console.error;
+        const consoleOutput = document.getElementById('console-output');
+        
+        function addToConsole(message, type = 'log') {
+            const div = document.createElement('div');
+            div.style.color = type === 'error' ? 'red' : 'black';
+            div.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            consoleOutput.appendChild(div);
+            consoleOutput.scrollTop = consoleOutput.scrollHeight;
+        }
+
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            addToConsole(args.join(' '), 'log');
+        };
+
+        console.error = function(...args) {
+            originalError.apply(console, args);
+            addToConsole(args.join(' '), 'error');
+        };
+
+        // 环境检测
+        function checkEnvironment() {
+            const envInfo = document.getElementById('env-info');
+            let html = '<div class="status success">✅ 环境检测完成</div>';
+            
+            // 检查基本环境
+            html += `<p><strong>User Agent:</strong> ${navigator.userAgent}</p>`;
+            html += `<p><strong>URL:</strong> ${window.location.href}</p>`;
+            html += `<p><strong>Protocol:</strong> ${window.location.protocol}</p>`;
+            
+            // 检查是否在 Tauri 环境中
+            if (window.__TAURI__) {
+                html += '<div class="status success">✅ 检测到 Tauri 环境</div>';
+            } else {
+                html += '<div class="status warning">⚠️ 未检测到 Tauri 环境（正常，在浏览器中运行）</div>';
+            }
+            
+            // 检查 Vite 环境变量（通过 process.env 检测）
+            html += '<div class="status info">ℹ️ 调试页面无法直接访问 import.meta</div>';
+            html += '<p>这是正常的，因为调试页面是独立的 HTML 文件</p>';
+            html += '<p>环境变量通过 Vite 的 define 配置注入到 process.env 中</p>';
+            
+            // 检查 process.env 变量（通过 Vite define 定义）
+            html += '<h3>Process.env 变量（通过 Vite define 定义）</h3>';
+            if (typeof process !== 'undefined' && process.env) {
+                html += '<div class="status success">✅ 检测到 process.env</div>';
+                html += `<p><strong>NODE_ENV:</strong> ${process.env.NODE_ENV || 'undefined'}</p>`;
+                html += `<p><strong>VUE_APP_CLIENT_SOCKET:</strong> ${process.env.VUE_APP_CLIENT_SOCKET || 'undefined'}</p>`;
+                html += `<p><strong>VUE_APP_CLIENT_API:</strong> ${process.env.VUE_APP_CLIENT_API || 'undefined'}</p>`;
+                html += `<p><strong>VUE_APP_PUBLIC_KEY:</strong> ${process.env.VUE_APP_PUBLIC_KEY ? '已定义（长度: ' + process.env.VUE_APP_PUBLIC_KEY.length + '）' : 'undefined'}</p>`;
+                html += `<p><strong>PATH_INDEX_PIC:</strong> ${process.env.PATH_INDEX_PIC || 'undefined'}</p>`;
+            } else {
+                html += '<div class="status error">❌ 未检测到 process.env</div>';
+            }
+            
+            envInfo.innerHTML = html;
+        }
+
+        // 测试 Vue
+        window.testVue = function() {
+            const vueTest = document.getElementById('vue-test');
+            
+            try {
+                // 检查 Vue 是否加载
+                if (typeof Vue !== 'undefined') {
+                    vueTest.innerHTML = '<div class="status success">✅ Vue 已加载</div>';
+                    console.log('Vue version:', Vue.version);
+                } else {
+                    vueTest.innerHTML = '<div class="status error">❌ Vue 未加载</div>';
+                    console.error('Vue is not defined');
+                }
+            } catch (error) {
+                vueTest.innerHTML = `<div class="status error">❌ Vue 测试失败: ${error.message}</div>`;
+                console.error('Vue test error:', error);
+            }
+        }
+
+        // 测试路由
+        window.testRouter = function() {
+            const routerTest = document.getElementById('router-test');
+            
+            try {
+                // 这里需要等待 Vue 应用加载
+                setTimeout(() => {
+                    if (window.vueApp && window.vueApp.$router) {
+                        routerTest.innerHTML = '<div class="status success">✅ 路由已加载</div>';
+                        console.log('Current route:', window.vueApp.$route);
+                    } else {
+                        routerTest.innerHTML = '<div class="status error">❌ 路由未加载</div>';
+                        console.error('Router not found');
+                    }
+                }, 1000);
+            } catch (error) {
+                routerTest.innerHTML = `<div class="status error">❌ 路由测试失败: ${error.message}</div>`;
+                console.error('Router test error:', error);
+            }
+        }
+
+        // 测试 Store
+        window.testStore = function() {
+            try {
+                if (window.vueApp && window.vueApp.$store) {
+                    console.log('Store state:', window.vueApp.$store.state);
+                } else {
+                    console.error('Store not found');
+                }
+            } catch (error) {
+                console.error('Store test error:', error);
+            }
+        }
+
+        // 测试环境变量
+        window.testEnvVars = function() {
+            const envTest = document.getElementById('env-test');
+            
+            try {
+                let html = '<h4>环境变量测试结果：</h4>';
+                
+                // 测试 process.env
+                if (typeof process !== 'undefined' && process.env) {
+                    html += '<div class="status success">✅ process.env 可用</div>';
+                    html += `<p><strong>NODE_ENV:</strong> ${process.env.NODE_ENV || 'undefined'}</p>`;
+                    html += `<p><strong>VUE_APP_CLIENT_SOCKET:</strong> ${process.env.VUE_APP_CLIENT_SOCKET || 'undefined'}</p>`;
+                    html += `<p><strong>VUE_APP_CLIENT_API:</strong> ${process.env.VUE_APP_CLIENT_API || 'undefined'}</p>`;
+                    html += `<p><strong>PATH_INDEX_PIC:</strong> ${process.env.PATH_INDEX_PIC || 'undefined'}</p>`;
+                } else {
+                    html += '<div class="status error">❌ process.env 不可用</div>';
+                }
+                
+                // 测试 window 对象上的全局变量
+                if (window.VUE_APP_CLIENT_SOCKET) {
+                    html += '<div class="status success">✅ 全局变量可用</div>';
+                    html += `<p><strong>VUE_APP_CLIENT_SOCKET:</strong> ${window.VUE_APP_CLIENT_SOCKET}</p>`;
+                } else {
+                    html += '<div class="status warning">⚠️ 全局变量不可用</div>';
+                }
+                
+                envTest.innerHTML = html;
+            } catch (error) {
+                envTest.innerHTML = `<div class="status error">❌ 环境变量测试失败: ${error.message}</div>`;
+                console.error('Env test error:', error);
+            }
+        }
+
+        // 清空控制台
+        window.clearConsole = function() {
+            consoleOutput.innerHTML = '';
+        }
+
+        // 页面加载完成后执行
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Debug page loaded');
+            checkEnvironment();
+            
+            // 监听错误
+            window.addEventListener('error', function(e) {
+                console.error('Global error:', e.error);
+            });
+            
+            // 监听未处理的 Promise 拒绝
+            window.addEventListener('unhandledrejection', function(e) {
+                console.error('Unhandled promise rejection:', e.reason);
+            });
+        });
+    </script>
+</body>
+</html>

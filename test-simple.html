@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Test</title>
+</head>
+<body>
+    <div id="app">
+        <h1>Vue Test</h1>
+        <p>If you see this, Vue is working!</p>
+    </div>
+    
+    <script type="module">
+        import Vue from '/src/main.js';
+        console.log('Vue imported:', Vue);
+        
+        // 检查 window.vueApp
+        setTimeout(() => {
+            console.log('window.vueApp:', window.vueApp);
+            if (window.vueApp) {
+                console.log('Vue app found!');
+                console.log('Router:', window.vueApp.$router);
+                console.log('Store:', window.vueApp.$store);
+            } else {
+                console.log('Vue app not found');
+            }
+        }, 2000);
+    </script>
+</body>
+</html>
