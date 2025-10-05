@@ -1,57 +1,58 @@
 version: '1.0'
-name: Build Windows App
+name: build-windows-app
+displayName: build-windows-app
 
 stages:
   - stage:
-      name: build-windows
-      displayName: Build Windows Application
-      steps:
-        - step:
-            name: checkout
-            displayName: Checkout Code
-            type: checkout
-            
-        - step:
-            name: setup-node
-            displayName: Setup Node.js
-            type: script
-            script:
-              - echo "Installing Node.js 18"
-              - choco install nodejs --version=18.19.0 -y
-              - node --version
-              - npm --version
-              
-        - step:
-            name: install-deps
-            displayName: Install Dependencies
-            type: script
-            script:
-              - cd kaiyuan-payment-tauri
-              - npm ci
-              
-        - step:
-            name: setup-rust
-            displayName: Setup Rust
-            type: script
-            script:
-              - echo "Installing Rust"
-              - choco install rust -y
-              - rustup default stable-x86_64-pc-windows-msvc
-              - rustc --version
-              - cargo --version
-              
-        - step:
-            name: build-app
-            displayName: Build Tauri App
-            type: script
-            script:
-              - cd kaiyuan-payment-tauri
-              - npm run tauri build
-              
-        - step:
-            name: upload-artifacts
-            displayName: Upload Artifacts
-            type: script
-            script:
-              - echo "Build completed, artifacts available in src-tauri/target/release/bundle/"
-              - dir src-tauri\target\release\bundle
+    name: build-windows
+    displayName: Build Windows Application
+    steps:
+      - step:
+        name: checkout
+        displayName: Checkout Code
+        type: checkout
+        
+      - step:
+        name: setup-node
+        displayName: Setup Node.js
+        type: script
+        script:
+          - echo "Installing Node.js 18"
+          - choco install nodejs --version=18.19.0 -y
+          - node --version
+          - npm --version
+          
+      - step:
+        name: install-deps
+        displayName: Install Dependencies
+        type: script
+        script:
+          - cd kaiyuan-payment-tauri
+          - npm ci
+          
+      - step:
+        name: setup-rust
+        displayName: Setup Rust
+        type: script
+        script:
+          - echo "Installing Rust"
+          - choco install rust -y
+          - rustup default stable-x86_64-pc-windows-msvc
+          - rustc --version
+          - cargo --version
+          
+      - step:
+        name: build-app
+        displayName: Build Tauri App
+        type: script
+        script:
+          - cd kaiyuan-payment-tauri
+          - npm run tauri build
+          
+      - step:
+        name: upload-artifacts
+        displayName: Upload Artifacts
+        type: script
+        script:
+          - echo "Build completed, artifacts available in src-tauri/target/release/bundle/"
+          - dir src-tauri\target\release\bundle
