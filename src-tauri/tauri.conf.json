@@ -1,6 +1,6 @@
 ﻿{
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "开元支付",
+  "productName": "kaiyuan-payment",
   "version": "0.1.0",
   "identifier": "com.kaiyuan.payment",
   "build": {
@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "开元支付",
+        "title": "Kaiyuan Payment",
         "width": 1200,
         "height": 800,
         "resizable": true,
