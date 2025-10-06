@@ -23,7 +23,6 @@ jobs:
           cache-dependency-path: '**/package-lock.json'
 
       - name: Install frontend dependencies
-        working-directory: kaiyuan-payment-tauri
         run: npm ci
 
       - name: Setup Rust toolchain
@@ -34,7 +33,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          projectPath: kaiyuan-payment-tauri
+          projectPath: .
           tauriScript: npm run tauri
           args: build
 
@@ -42,5 +41,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: windows-app
-          path: kaiyuan-payment-tauri/src-tauri/target/release/bundle/
+          path: src-tauri/target/release/bundle/
           retention-days: 30
